@@ -54,11 +54,16 @@ const checkIfHouseAlreadyReceivedSomePresent = ({
   return deliveredHouses.has(houseToBeDeliveredPosition);
 };
 
-export const getHousesReceivedLeastOncePresent = (input: string) => {
-  const deliveredHouses: DeliveredHousesType = new Set([DEFAULT_DELIVERED_HOUSE_POSITION]);
+export const getHousesReceivedLeastOncePresent = ({
+  instructions,
+  deliveredHouses = new Set([DEFAULT_DELIVERED_HOUSE_POSITION]),
+}: {
+  instructions: string;
+  deliveredHouses?: DeliveredHousesType;
+}) => {
   let currentPosition = { x: 0, y: 0 };
 
-  for (const instruction of input) {
+  for (const instruction of instructions) {
     const houseToBeDeliveredPosition = convertInstructionToHousePosition({
       instruction,
       currentPosition,
@@ -77,5 +82,41 @@ export const getHousesReceivedLeastOncePresent = (input: string) => {
     deliveredHouses.add(houseToBeDeliveredPosition);
   }
 
-  return deliveredHouses.size;
+  return deliveredHouses;
+};
+
+const shareInstructionsBeteweenSantaAndRobotSanta = (input: string) => {
+  const santaInstructions = [];
+  const robotSantaInstructions = [];
+  let i = 0;
+
+  for (const instruction of input) {
+    const isEven = i % 2 === 0;
+
+    if (isEven) {
+      santaInstructions.push(instruction);
+    } else {
+      robotSantaInstructions.push(instruction);
+    }
+
+    i++;
+  }
+
+  return [santaInstructions.join(''), robotSantaInstructions.join('')];
+};
+
+export const getHousesReceivedLeastOncePresentWithRobotSanta = (input: string) => {
+  const deliveredHouses: DeliveredHousesType = new Set([DEFAULT_DELIVERED_HOUSE_POSITION]);
+  const [santaInstructions, robotSantaInstructions] =
+    shareInstructionsBeteweenSantaAndRobotSanta(input);
+  const santaDelivredHouses = getHousesReceivedLeastOncePresent({
+    instructions: santaInstructions,
+    deliveredHouses,
+  });
+  const robotSantaDeliveredHouses = getHousesReceivedLeastOncePresent({
+    instructions: robotSantaInstructions,
+    deliveredHouses: santaDelivredHouses,
+  });
+
+  return robotSantaDeliveredHouses.size;
 };
