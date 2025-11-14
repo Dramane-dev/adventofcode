@@ -1,4 +1,4 @@
-import { findHowManyLightsAreLit } from './solution';
+import { findHowManyLightsAreLit, findTotalBrightness } from './solution';
 
 describe('Day 6: Probably a Fire Hazard', () => {
   describe('findHowManyLightsAreLit', () => {
@@ -107,6 +107,138 @@ describe('Day 6: Probably a Fire Hazard', () => {
         // GIVEN
         // WHEN
         const result = findHowManyLightsAreLit(input);
+
+        // THEN
+        expect(result).toBe(expected);
+      },
+    );
+  });
+  describe('findTotalBrightness', () => {
+    const cases = [
+      // === TURN ON CASES ===
+      {
+        level: 'basic - single turn on',
+        input: ['turn on 0,0 through 0,0'],
+        expected: 1, // brightness = 1
+      },
+      {
+        level: 'basic - small square turn on',
+        input: ['turn on 0,0 through 2,2'],
+        expected: 9, // 9 lights × 1 brightness each
+      },
+      {
+        level: 'basic - multiple turn on same light',
+        input: ['turn on 0,0 through 0,0', 'turn on 0,0 through 0,0'],
+        expected: 2, // brightness stacks: 1 + 1 = 2
+      },
+
+      // === TURN OFF CASES ===
+      {
+        level: 'turn off - on already off light',
+        input: ['turn off 0,0 through 0,0'],
+        expected: 0, // brightness stays at 0 (minimum)
+      },
+      {
+        level: 'turn off - decrease brightness',
+        input: ['turn on 0,0 through 0,0', 'turn on 0,0 through 0,0', 'turn off 0,0 through 0,0'],
+        expected: 1, // 0 + 1 + 1 - 1 = 1
+      },
+      {
+        level: 'turn off - cannot go below 0',
+        input: ['turn on 0,0 through 0,0', 'turn off 0,0 through 0,0', 'turn off 0,0 through 0,0'],
+        expected: 0, // 1 - 1 - 0 = 0 (second turn off does nothing)
+      },
+
+      // === TOGGLE CASES ===
+      {
+        level: 'toggle - increases by 2',
+        input: ['toggle 0,0 through 0,0'],
+        expected: 2, // brightness = 2
+      },
+      {
+        level: 'toggle - multiple times',
+        input: ['toggle 0,0 through 0,0', 'toggle 0,0 through 0,0'],
+        expected: 4, // 2 + 2 = 4
+      },
+      {
+        level: 'toggle - small square',
+        input: ['toggle 0,0 through 2,2'],
+        expected: 18, // 9 lights × 2 brightness each
+      },
+
+      // === COMPLEX SEQUENCES ===
+      {
+        level: 'complex - turn on then toggle',
+        input: ['turn on 0,0 through 0,0', 'toggle 0,0 through 0,0'],
+        expected: 3, // 1 + 2 = 3
+      },
+      {
+        level: 'complex - all operations on same light',
+        input: [
+          'turn on 0,0 through 0,0', // +1 = 1
+          'turn on 0,0 through 0,0', // +1 = 2
+          'toggle 0,0 through 0,0', // +2 = 4
+          'turn off 0,0 through 0,0', // -1 = 3
+        ],
+        expected: 3,
+      },
+      {
+        level: 'complex - overlapping rectangles',
+        input: [
+          'turn on 0,0 through 1,1', // 4 lights with brightness 1 = 4
+          'toggle 0,0 through 1,1', // same 4 lights +2 = 12 total (4×3)
+        ],
+        expected: 12,
+      },
+      {
+        level: 'complex - partial overlap',
+        input: [
+          'turn on 0,0 through 2,2', // 9 lights × 1 = 9
+          'toggle 1,1 through 2,2', // 4 lights +2 = 9 + 8 = 17
+        ],
+        expected: 17, // 5 lights with brightness 1 + 4 lights with brightness 3
+      },
+
+      // === EXAMPLE FROM PUZZLE ===
+      {
+        level: 'puzzle example 1',
+        input: ['turn on 0,0 through 0,0'],
+        expected: 1,
+      },
+      {
+        level: 'puzzle example 2',
+        input: ['toggle 0,0 through 999,999'],
+        expected: 2000000, // 1,000,000 lights × 2 brightness
+      },
+
+      // === EDGE CASES ===
+      {
+        level: 'edge - full grid turn on',
+        input: ['turn on 0,0 through 999,999'],
+        expected: 1000000, // 1M lights × 1 brightness
+      },
+      {
+        level: 'edge - full grid toggle',
+        input: ['toggle 0,0 through 999,999'],
+        expected: 2000000, // 1M lights × 2 brightness
+      },
+      {
+        level: 'edge - rectangle operations',
+        input: [
+          'turn on 0,0 through 2,2', // 9 × 1 = 9
+          'turn on 1,1 through 3,3', // 5 new lights × 1 + 4 overlap × 1 = 9 + 9 = 18
+          'toggle 2,2 through 2,2', // 1 light +2 = 18 + 2 = 20
+        ],
+        expected: 20,
+      },
+    ];
+
+    it.each(cases)(
+      'should return $expected when $level level with $input',
+      ({ input, expected }) => {
+        // GIVEN
+        // WHEN
+        const result = findTotalBrightness(input);
 
         // THEN
         expect(result).toBe(expected);
