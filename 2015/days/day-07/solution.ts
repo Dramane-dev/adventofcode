@@ -36,16 +36,15 @@ export const findSpecificWireSignal = (inputs: string[]) => {
   let remainingInstructions = [...instructions];
 
   while (remainingInstructions.length) {
+    const remainingInstructionsLengthBefore = remainingInstructions.length;
+
     remainingInstructions = remainingInstructions.filter((instruction) => {
-      // parsing instruction step ✅
       const parsedInstruction = parseInstruction(instruction);
 
-      // check if it's possible to apply instruction ✅
       if (hasSignalValue({ wiresWithSignals, parsedInstruction })) {
-        // apply instruction ✅
         applyInstruction({ wiresWithSignals, parsedInstruction });
 
-        // do not keep exectuted instruction ✅
+        // do not keep exectuted instruction
         return false;
       }
 
@@ -55,8 +54,13 @@ export const findSpecificWireSignal = (inputs: string[]) => {
        */
       return true;
     });
+
+    const remainingInstructionsLengthAfter = remainingInstructions.length;
+
+    if (remainingInstructionsLengthBefore === remainingInstructionsLengthAfter) {
+      break;
+    }
   }
 
-  // use a while (remainingInstructions.length) {} to pass until remainingInstructions was empty ✅
   return wiresWithSignals.get('a');
 };

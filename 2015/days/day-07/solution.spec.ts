@@ -522,11 +522,11 @@ describe('Day 7: Some Assembly Required', () => {
         input: ['1 AND 1 -> a'],
         expected: 1,
       },
-      // {
-      //   level: 'AND operation starting with an unknown wire',
-      //   input: ['1 AND gy -> a'],
-      //   expected: 1,
-      // },
+      {
+        level: 'AND operation starting with an unknown wire',
+        input: ['1 AND gy -> a'],
+        expected: undefined,
+      },
       {
         level: 'complex wire names',
         input: ['123 -> lf', '456 -> lq', 'lf AND lq -> a'],
@@ -547,11 +547,11 @@ describe('Day 7: Some Assembly Required', () => {
         input: ['1 OR 2 -> a'],
         expected: 3,
       },
-      // {
-      //   level: 'OR operation with unknown wire',
-      //   input: ['x OR 2 -> a'],
-      //   expected: 0,
-      // },
+      {
+        level: 'OR operation with unknown wire',
+        input: ['x OR 2 -> a'],
+        expected: undefined,
+      },
       {
         level: 'LSHIFT operation',
         input: ['123 -> x', 'x LSHIFT 2 -> a'],
@@ -562,11 +562,11 @@ describe('Day 7: Some Assembly Required', () => {
         input: ['1 LSHIFT 2 -> a'],
         expected: 4,
       },
-      // {
-      //   level: 'LSHIFT operation with an unknown wire',
-      //   input: ['y LSHIFT 2 -> a'],
-      //   expected: 0,
-      // },
+      {
+        level: 'LSHIFT operation with an unknown wire',
+        input: ['y LSHIFT 2 -> a'],
+        expected: undefined,
+      },
       {
         level: 'RSHIFT operation',
         input: ['456 -> y', 'y RSHIFT 2 -> a'],
@@ -577,11 +577,11 @@ describe('Day 7: Some Assembly Required', () => {
         input: ['1 RSHIFT 2 -> a'],
         expected: 0,
       },
-      // {
-      //   level: 'RSHIFT operation with an unknown wire',
-      //   input: ['y RSHIFT 2 -> a'],
-      //   expected: 0,
-      // },
+      {
+        level: 'RSHIFT operation with an unknown wire',
+        input: ['y RSHIFT 2 -> a'],
+        expected: undefined,
+      },
       {
         level: 'multiple instructions',
         input: [
