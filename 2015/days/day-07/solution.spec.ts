@@ -1,6 +1,7 @@
 import { BITWISE_OPERATOR_ENUM } from './constants';
+import { findSpecificWireSignalRecursively, prepareWireInstructions } from './recursive-solution';
 import { hasSignalValue, applyInstruction, findSpecificWireSignal } from './solution';
-import { parseInstruction } from './utils';
+import { formatExecutionTime, parseInstruction } from './utils';
 
 describe('Day 7: Some Assembly Required', () => {
   describe('parseInstruction', () => {
@@ -490,7 +491,7 @@ describe('Day 7: Some Assembly Required', () => {
       },
     );
   });
-  describe('hasSignalValue', () => {
+  describe('findSpecificWireSignal', () => {
     const cases = [
       {
         level: 'large direct value',
@@ -607,6 +608,513 @@ describe('Day 7: Some Assembly Required', () => {
 
         // THEN
         expect(result).toBe(expected);
+      },
+    );
+  });
+  describe('prepareWireInstructions', () => {
+    const cases = [
+      {
+        level: 'direct signal value assignment',
+        input: ['123 -> x'],
+        expected: new Map([['x', '123 -> x']]),
+      },
+      {
+        level: 'wire to wire assignment',
+        input: ['x -> y'],
+        expected: new Map([['y', 'x -> y']]),
+      },
+      {
+        level: 'NOT operation (unary)',
+        input: ['NOT x -> h'],
+        expected: new Map([['h', 'NOT x -> h']]),
+      },
+      {
+        level: 'AND operation',
+        input: ['x AND y -> d'],
+        expected: new Map([['d', 'x AND y -> d']]),
+      },
+      {
+        level: 'complex wire names',
+        input: ['lf AND lq -> ls'],
+        expected: new Map([['ls', 'lf AND lq -> ls']]),
+      },
+      {
+        level: 'OR operation',
+        input: ['x OR y -> e'],
+        expected: new Map([['e', 'x OR y -> e']]),
+      },
+      {
+        level: 'LSHIFT operation',
+        input: ['x LSHIFT 2 -> f'],
+        expected: new Map([['f', 'x LSHIFT 2 -> f']]),
+      },
+      {
+        level: 'RSHIFT operation',
+        input: ['y RSHIFT 2 -> g'],
+        expected: new Map([['g', 'y RSHIFT 2 -> g']]),
+      },
+      {
+        level: 'multiple operations',
+        input: ['123 -> x', 'x -> y', 'NOT x -> h', 'x AND y -> d'],
+        expected: new Map([
+          ['x', '123 -> x'],
+          ['y', 'x -> y'],
+          ['h', 'NOT x -> h'],
+          ['d', 'x AND y -> d'],
+        ]),
+      },
+    ];
+    it.each(cases)(
+      'should return $expected when $level level with $input',
+      ({ input, expected }) => {
+        // GIVEN
+        // WHEN
+        const result = prepareWireInstructions(input);
+
+        // THEN
+        expect(result).toEqual(expected);
+      },
+    );
+  });
+  describe('findSpecificWireSignalRecursively', () => {
+    const recursiveCases = [
+      // ============================================
+      // BASIC CASES - Direct assignments
+      // ============================================
+      {
+        level: 'direct value to wire',
+        inputs: ['123 -> a'],
+        wireToSearch: 'a',
+        expected: 123,
+      },
+      {
+        level: 'large direct value',
+        inputs: ['65535 -> a'],
+        wireToSearch: 'a',
+        expected: 65535,
+      },
+      {
+        level: 'wire to wire assignment',
+        inputs: ['123 -> x', 'x -> a'],
+        wireToSearch: 'a',
+        expected: 123,
+      },
+      {
+        level: 'chained wire assignments',
+        inputs: ['123 -> x', 'x -> y', 'y -> z', 'z -> a'],
+        wireToSearch: 'a',
+        expected: 123,
+      },
+
+      // ============================================
+      // NOT OPERATOR (Unary)
+      // ============================================
+      {
+        level: 'NOT operation',
+        inputs: ['123 -> x', 'NOT x -> a'],
+        wireToSearch: 'a',
+        expected: 65412,
+      },
+      {
+        level: 'NOT with direct value',
+        inputs: ['NOT 123 -> a'],
+        wireToSearch: 'a',
+        expected: 65412,
+      },
+      {
+        level: 'chained NOT operations',
+        inputs: ['123 -> x', 'NOT x -> y', 'NOT y -> a'],
+        wireToSearch: 'a',
+        expected: 123,
+      },
+
+      // ============================================
+      // AND OPERATOR
+      // ============================================
+      {
+        level: 'AND operation with two wires',
+        inputs: ['123 -> x', '456 -> y', 'x AND y -> a'],
+        wireToSearch: 'a',
+        expected: 72,
+      },
+      {
+        level: 'AND with signal and wire',
+        inputs: ['123 -> x', '1 AND x -> a'],
+        wireToSearch: 'a',
+        expected: 1,
+      },
+      {
+        level: 'AND with wire and signal',
+        inputs: ['123 -> x', 'x AND 1 -> a'],
+        wireToSearch: 'a',
+        expected: 1,
+      },
+      {
+        level: 'AND with two direct values',
+        inputs: ['5 AND 3 -> a'],
+        wireToSearch: 'a',
+        expected: 1,
+      },
+
+      // ============================================
+      // OR OPERATOR
+      // ============================================
+      {
+        level: 'OR operation with two wires',
+        inputs: ['123 -> x', '456 -> y', 'x OR y -> a'],
+        wireToSearch: 'a',
+        expected: 507,
+      },
+      {
+        level: 'OR with signal and wire',
+        inputs: ['123 -> x', '1 OR x -> a'],
+        wireToSearch: 'a',
+        expected: 123,
+      },
+      {
+        level: 'OR with two direct values',
+        inputs: ['1 OR 2 -> a'],
+        wireToSearch: 'a',
+        expected: 3,
+      },
+
+      // ============================================
+      // LSHIFT OPERATOR
+      // ============================================
+      {
+        level: 'LSHIFT operation',
+        inputs: ['123 -> x', 'x LSHIFT 2 -> a'],
+        wireToSearch: 'a',
+        expected: 492,
+      },
+      {
+        level: 'LSHIFT with direct value',
+        inputs: ['1 LSHIFT 2 -> a'],
+        wireToSearch: 'a',
+        expected: 4,
+      },
+      {
+        level: 'LSHIFT with large shift',
+        inputs: ['1 LSHIFT 15 -> a'],
+        wireToSearch: 'a',
+        expected: 32768,
+      },
+
+      // ============================================
+      // RSHIFT OPERATOR
+      // ============================================
+      {
+        level: 'RSHIFT operation',
+        inputs: ['456 -> y', 'y RSHIFT 2 -> a'],
+        wireToSearch: 'a',
+        expected: 114,
+      },
+      {
+        level: 'RSHIFT with direct value',
+        inputs: ['8 RSHIFT 2 -> a'],
+        wireToSearch: 'a',
+        expected: 2,
+      },
+      {
+        level: 'RSHIFT resulting in zero',
+        inputs: ['1 RSHIFT 2 -> a'],
+        wireToSearch: 'a',
+        expected: 0,
+      },
+
+      // ============================================
+      // COMPLEX CHAINS - Multiple dependencies
+      // ============================================
+      {
+        level: 'complex chain with multiple operations',
+        inputs: ['2 -> x', 'x LSHIFT 1 -> y', 'y OR x -> z', 'NOT z -> a'],
+        wireToSearch: 'a',
+        expected: 65529,
+      },
+      {
+        level: 'diamond dependency pattern',
+        inputs: ['5 -> b', 'b -> c', 'b -> d', 'c AND d -> a'],
+        wireToSearch: 'a',
+        expected: 5,
+      },
+      {
+        level: 'multiple wire reuse (cache test)',
+        inputs: ['123 -> x', 'x -> y', 'x -> z', 'y AND z -> a'],
+        wireToSearch: 'a',
+        expected: 123,
+      },
+      {
+        level: 'deep nested dependencies',
+        inputs: ['2 -> a', 'a -> b', 'b -> c', 'c -> d', 'd -> e', 'e -> f'],
+        wireToSearch: 'f',
+        expected: 2,
+      },
+
+      // ============================================
+      // OFFICIAL EXAMPLE from puzzle
+      // ============================================
+      {
+        level: 'full example circuit from puzzle',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'd',
+        expected: 72,
+      },
+      {
+        level: 'full example - wire e',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'e',
+        expected: 507,
+      },
+      {
+        level: 'full example - wire f',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'f',
+        expected: 492,
+      },
+      {
+        level: 'full example - wire g',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'g',
+        expected: 114,
+      },
+      {
+        level: 'full example - wire h',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'h',
+        expected: 65412,
+      },
+      {
+        level: 'full example - wire i',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'i',
+        expected: 65079,
+      },
+      {
+        level: 'full example - wire x (source)',
+        inputs: [
+          '123 -> x',
+          '456 -> y',
+          'x AND y -> d',
+          'x OR y -> e',
+          'x LSHIFT 2 -> f',
+          'y RSHIFT 2 -> g',
+          'NOT x -> h',
+          'NOT y -> i',
+        ],
+        wireToSearch: 'x',
+        expected: 123,
+      },
+
+      // ============================================
+      // EDGE CASES
+      // ============================================
+      {
+        level: 'zero value',
+        inputs: ['0 -> a'],
+        wireToSearch: 'a',
+        expected: 0,
+      },
+      {
+        level: 'operations with zero',
+        inputs: ['0 -> x', 'x AND 5 -> a'],
+        wireToSearch: 'a',
+        expected: 0,
+      },
+      {
+        level: 'NOT zero',
+        inputs: ['0 -> x', 'NOT x -> a'],
+        wireToSearch: 'a',
+        expected: 65535,
+      },
+      {
+        level: 'complex wire names',
+        inputs: ['123 -> lf', '456 -> lq', 'lf AND lq -> a'],
+        wireToSearch: 'a',
+        expected: 72,
+      },
+      {
+        level: 'unordered instructions',
+        inputs: ['x AND y -> a', '456 -> y', '123 -> x'],
+        wireToSearch: 'a',
+        expected: 72,
+      },
+      {
+        level: 'deeply unordered instructions',
+        inputs: ['d OR e -> a', 'x AND y -> d', 'x OR y -> e', '456 -> y', '123 -> x'],
+        wireToSearch: 'a',
+        expected: 507,
+      },
+
+      // ============================================
+      // CACHE EFFICIENCY TEST
+      // ============================================
+      {
+        level: 'wire used multiple times (tests memoization)',
+        inputs: ['100 -> x', 'x AND x -> y', 'x OR y -> z', 'y AND z -> a'],
+        wireToSearch: 'a',
+        expected: 100,
+      },
+    ];
+
+    it.each(recursiveCases)(
+      'should return $expected when $level level with $inputs',
+      ({ inputs, wireToSearch, expected }) => {
+        // GIVEN
+        // WHEN
+        const result = findSpecificWireSignalRecursively({ inputs, wireToSearch });
+
+        // THEN
+        expect(result).toEqual(expected);
+      },
+    );
+  });
+  describe('formatExecutionTime', () => {
+    const cases = [
+      {
+        level: 'milliseconds',
+        input: 50,
+        expected: '50ms',
+      },
+      {
+        level: 'milliseconds',
+        input: 100,
+        expected: '100ms',
+      },
+      {
+        level: 'milliseconds',
+        input: 856,
+        expected: '856ms',
+      },
+      {
+        level: 'milliseconds',
+        input: 999,
+        expected: '999ms',
+      },
+      {
+        level: 'seconds',
+        input: 1_000,
+        expected: '1s',
+      },
+      {
+        level: 'seconds',
+        input: 1_001,
+        expected: '1s',
+      },
+      {
+        level: 'seconds',
+        input: 5_789,
+        expected: '6s',
+      },
+      {
+        level: 'seconds',
+        input: 59_789,
+        expected: '60s',
+      },
+      {
+        level: 'minutes',
+        input: 60_000,
+        expected: '1m',
+      },
+      {
+        level: 'minutes',
+        input: 2_870_781,
+        expected: '48m',
+      },
+      {
+        level: 'minutes',
+        input: 3_456_908,
+        expected: '58m',
+      },
+      {
+        level: 'minutes',
+        input: 3_589_123,
+        expected: '60m',
+      },
+      {
+        level: 'hours',
+        input: 3_600_000,
+        expected: '1h',
+      },
+      {
+        level: 'hours',
+        input: 5_870_781,
+        expected: '2h',
+      },
+      {
+        level: 'hours',
+        input: 11_456_908,
+        expected: '3h',
+      },
+      {
+        level: 'hours',
+        input: 125_589_123,
+        expected: '35h',
+      },
+    ];
+
+    it.each(cases)(
+      'should return $expected when $level level with $input',
+      ({ input, expected }) => {
+        // GIVEN
+        // WHEN
+        const result = formatExecutionTime(input);
+
+        // THEN
+        expect(result).toEqual(expected);
       },
     );
   });

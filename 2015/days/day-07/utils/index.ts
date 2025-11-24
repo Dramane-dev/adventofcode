@@ -12,7 +12,7 @@ export const mapExtractedOperatorToBitwiseOperator = (operator: string) => {
   return operatorMapper[operator];
 };
 
-const isBitwiseOperator = (instruction: string) => {
+export const isBitwiseOperator = (instruction: string) => {
   return (
     BITWISE_OPERATORS.filter((operator) => {
       return instruction.includes(operator);
@@ -20,7 +20,7 @@ const isBitwiseOperator = (instruction: string) => {
   );
 };
 
-const isLogicalOperator = (instruction: string) => {
+export const isLogicalOperator = (instruction: string) => {
   return (
     LOGICAL_OPERATORS.filter((operator) => {
       return instruction.includes(operator);
@@ -28,11 +28,11 @@ const isLogicalOperator = (instruction: string) => {
   );
 };
 
-const isUnaryOperator = (instruction: string) => {
+export const isUnaryOperator = (instruction: string) => {
   return instruction.includes(BITWISE_OPERATOR_ENUM.NOT);
 };
 
-const isRorLShiftOperator = (instruction: string) => {
+export const isRorLShiftOperator = (instruction: string) => {
   return (
     instruction === BITWISE_OPERATOR_ENUM.RSHIFT || instruction === BITWISE_OPERATOR_ENUM.LSHIFT
   );
@@ -41,6 +41,31 @@ const isRorLShiftOperator = (instruction: string) => {
 export const isNumeric = (value: string) => {
   const convertedValue = Number(value);
   return !isNaN(convertedValue) && Number.isInteger(convertedValue);
+};
+
+const MS_PER_SECOND = 1000;
+const MS_PER_MINUTE = 60 * 1000;
+const MS_PER_HOUR = 60 * 60 * 1000;
+
+export const formatExecutionTime = (ms: number) => {
+  if (ms < 1000) {
+    return `${ms}ms`;
+  }
+
+  if (ms >= 1000 && ms < 60_000) {
+    const seconds = Math.round(ms / MS_PER_SECOND);
+    return `${seconds}s`;
+  }
+
+  if (ms >= 60_000 && ms < 3_600_000) {
+    const minutes = Math.round(ms / MS_PER_MINUTE);
+    return `${minutes}m`;
+  }
+
+  if (ms >= 3_600_000) {
+    const hours = Math.round(ms / MS_PER_HOUR);
+    return `${hours}h`;
+  }
 };
 
 const parseInstructionWithUnaryOperation = (instructions: string[]): ParsedInstructionType => {
@@ -135,7 +160,7 @@ const BITWISE_OPERATION_MAP = {
   [BITWISE_OPERATOR_ENUM.NOT]: applyNotInstruction,
 } as const;
 
-const mapBitwiseOperatorToOperationFunction = ({
+export const mapBitwiseOperatorToOperationFunction = ({
   operator,
   firstSignal,
   secondSignal,
@@ -147,7 +172,7 @@ const mapBitwiseOperatorToOperationFunction = ({
   return BITWISE_OPERATION_MAP[operator](firstSignal, secondSignal);
 };
 
-const assertIsBitwiseOperator = (
+export const assertIsBitwiseOperator = (
   operator?: ParsedInstructionType['operator'],
 ): operator is BitwiseOperatorsType => {
   return !!operator && BITWISE_OPERATORS.includes(operator as BitwiseOperatorsType);
