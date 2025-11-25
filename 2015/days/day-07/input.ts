@@ -339,14 +339,3 @@ export const INPUT = [
   'NOT hn -> ho',
   'he RSHIFT 5 -> hh',
 ];
-
-// export const INPUT = [
-//   '123 -> x',
-//   '456 -> y',
-//   'x AND y -> d',
-//   'x OR y -> e',
-//   'x LSHIFT 2 -> f',
-//   'y RSHIFT 2 -> g',
-//   'NOT x -> h',
-//   'NOT y -> i',
-// ];

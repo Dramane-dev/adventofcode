@@ -264,3 +264,25 @@ export const applyOperatorInstruction = ({
     }),
   );
 };
+
+export const overrideInstruction = ({
+  instructions,
+  wire,
+  overrideValue,
+}: {
+  instructions: string[];
+  wire: string;
+  overrideValue: string;
+}) => {
+  const instructionIndex = instructions.findIndex((instrcution) =>
+    instrcution.match(new RegExp(`^.+ -> ${wire}$`)),
+  );
+
+  if (instructionIndex === -1) {
+    throw new Error(`Wire ${wire} not found in instructions`);
+  }
+
+  const instructionsCopy = [...instructions];
+  instructionsCopy[instructionIndex] = `${overrideValue} -> ${wire}`;
+  return instructionsCopy;
+};
