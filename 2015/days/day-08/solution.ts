@@ -3,28 +3,7 @@ import {
   ESCAPE_DOUBLE_QUOTES_PATTERN,
   ESCAPE_SEQUENCES_PATTERN,
 } from './constants';
-import { computePatternMatches, handleRegexOverlap } from './utils';
-
-export const subtractExcessPerPattern = ({
-  line,
-  pattern,
-  numberOfCharacters,
-  excessPerPattern,
-}: {
-  line: string;
-  pattern: RegExp;
-  numberOfCharacters: number;
-  excessPerPattern: number;
-}) => {
-  const charsPatternMatches = computePatternMatches({ line, pattern });
-
-  if (charsPatternMatches) {
-    numberOfCharacters -= charsPatternMatches * excessPerPattern;
-    line = handleRegexOverlap({ line, pattern });
-  }
-
-  return { line, numberOfCharacters };
-};
+import { subtractExcessPerPattern } from './utils';
 
 export const computeStringsCode = (santaList: string[]) => {
   return santaList.reduce((prevLine, currLine) => prevLine + currLine.length, 0);
