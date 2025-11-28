@@ -12,4 +12,48 @@ export const handleRegexOverlap = ({ line, pattern }: { line: string; pattern: R
   return line.replaceAll(pattern, '');
 };
 
-export const handleToto = () => {};
+export const subtractExcessPerPattern = ({
+  line,
+  pattern,
+  numberOfCharacters,
+  excessPerPattern,
+}: {
+  line: string;
+  pattern: RegExp;
+  numberOfCharacters: number;
+  excessPerPattern: number;
+}) => {
+  const charsPatternMatches = computePatternMatches({ line, pattern });
+
+  if (charsPatternMatches) {
+    numberOfCharacters -= charsPatternMatches * excessPerPattern;
+    line = handleRegexOverlap({ line, pattern });
+  }
+
+  return { line, numberOfCharacters };
+};
+
+export const addExcessPerPattern = ({
+  line,
+  pattern,
+  numberOfCharacters,
+  excessPerPattern,
+}: {
+  line: string;
+  pattern: RegExp;
+  numberOfCharacters: number;
+  excessPerPattern: number;
+}) => {
+  const charsPatternMatches = computePatternMatches({ line, pattern });
+
+  if (charsPatternMatches) {
+    numberOfCharacters += charsPatternMatches * excessPerPattern;
+    line = handleRegexOverlap({ line, pattern });
+  }
+
+  return { line, numberOfCharacters };
+};
+
+export const wrapStringWithDoubleQuotes = (str: string) => {
+  return String.raw`"${str}"`;
+};
