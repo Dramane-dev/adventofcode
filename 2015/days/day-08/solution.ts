@@ -1,16 +1,18 @@
 import {
   ASCII_CODE_PATTERN,
+  DOUBLE_QUOTES_PATTERN,
+  ESCAPE_CHAR_PATTERN,
   ESCAPE_DOUBLE_QUOTES_PATTERN,
   ESCAPE_SEQUENCES_PATTERN,
+  QUOTE_WRAPPER_CHARS,
 } from './constants';
-import { subtractExcessPerPattern } from './utils';
+import { addExcessPerPattern, subtractExcessPerPattern } from './utils';
 
 export const computeStringsCode = (santaList: string[]) => {
   return santaList.reduce((prevLine, currLine) => prevLine + currLine.length, 0);
 };
 
 export const computeStringsInMemory = (santaList: string[]) => {
-  const QUOTE_WRAPPER_CHARS = 2;
   let numberOfCharacters = 0;
 
   santaList.forEach((line) => {
@@ -43,12 +45,37 @@ export const computeStringsInMemory = (santaList: string[]) => {
   return numberOfCharacters;
 };
 
-export const computeCodeMemoryDifference = ({
-  codeLength,
-  memoryLength,
+export const computeEncodedStrings = (santaList: string[]) => {
+  let numberOfCharacters = 0;
+
+  santaList.forEach((line) => {
+    numberOfCharacters += line.length;
+    ({ line, numberOfCharacters } = addExcessPerPattern({
+      line,
+      numberOfCharacters,
+      pattern: ESCAPE_CHAR_PATTERN,
+      excessPerPattern: 1,
+    }));
+
+    ({ line, numberOfCharacters } = addExcessPerPattern({
+      line,
+      numberOfCharacters,
+      pattern: DOUBLE_QUOTES_PATTERN,
+      excessPerPattern: 1,
+    }));
+
+    numberOfCharacters += QUOTE_WRAPPER_CHARS;
+  });
+
+  return numberOfCharacters;
+};
+
+export const computeStringsLengthDifference = ({
+  firstStringsLength,
+  secondStringsLength,
 }: {
-  codeLength: number;
-  memoryLength: number;
+  firstStringsLength: number;
+  secondStringsLength: number;
 }) => {
-  return Math.abs(codeLength - memoryLength);
+  return Math.abs(firstStringsLength - secondStringsLength);
 };

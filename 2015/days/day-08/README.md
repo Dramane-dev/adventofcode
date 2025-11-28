@@ -36,10 +36,38 @@ In these examples:
   
   Question: **What is that number?**
 
-- **Part 2:** *(Will be revealed after completing Part 1)*
+## Part 2: Encoding the Strings
+
+Now Santa realizes he also needs to **encode** the strings - the reverse operation! You need to represent each string as it would appear in source code, properly escaped.
+
+### Encoding Rules
+
+When encoding a string for code representation:
+- Wrap the entire string in **double quotes** at the start and end
+- Escape every **backslash**: `\` becomes `\\`
+- Escape every **double quote**: `"` becomes `\"`
+
+### Examples
+
+| Original String | Encoded String     | Original Length | Encoded Length | Difference |
+|-----------------|--------------------|-----------------|----------------|------------|
+| `""`            | `"\"\""`           | 2               | 6              | +4         |
+| `"abc"`         | `"\"abc\""`        | 5               | 9              | +4         |
+| `"aaa\"aaa"`    | `"\"aaa\\\"aaa\""` | 10              | 16             | +6         |
+| `"\x27"`        | `"\"\\x27\""`      | 6               | 11             | +5         |
+
+In these examples:
+- **Total original**: `2 + 5 + 10 + 6 = 23` characters
+- **Total encoded**: `6 + 9 + 16 + 11 = 42` characters
+- **Difference**: `42 - 23 = 19`
+
+### Your Task
+
+Calculate the **total length of encoded strings** minus the **total length of original strings** for your entire input file.
+
+**Question: What is the total number of additional characters needed to encode all strings?**
 
 ---
-
 
 ```ruby
     cd 2015/days/day-08
