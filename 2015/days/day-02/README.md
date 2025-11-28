@@ -32,6 +32,40 @@ Total paper for one present = surface area + smallest-side area.
 
 Given a list of dimensions (one per line, formatted as `LxWxH`), compute the total number of square feet of wrapping paper needed across all presents.
 
+## Part 2
+
+The elves are also running low on **ribbon**. Ribbon is all the same width, so they only need to worry about the **length** they need to order.
+
+### Ribbon Calculation
+
+For each present, the ribbon required consists of two parts:
+
+1. **Wrap ribbon**: The shortest distance around the present's sides (smallest perimeter)
+   - Formula: `2 × (smallest side + second smallest side)`
+
+2. **Bow ribbon**: The cubic feet of volume
+   - Formula: `length × width × height`
+
+**Total ribbon per present** = wrap ribbon + bow ribbon
+
+### Examples
+
+For a present with dimensions `2x3x4`:
+- Smallest two dimensions: `2` and `3`
+- Wrap ribbon: `2 × (2 + 3) = 10` feet
+- Bow ribbon: `2 × 3 × 4 = 24` feet
+- **Total ribbon needed**: `10 + 24 = 34` feet
+
+For a present with dimensions `1x1x10`:
+- Smallest two dimensions: `1` and `1`
+- Wrap ribbon: `2 × (1 + 1) = 4` feet
+- Bow ribbon: `1 × 1 × 10 = 10` feet
+- **Total ribbon needed**: `4 + 10 = 14` feet
+
+### Your Task
+
+Given the same list of present dimensions, calculate the **total feet of ribbon** the elves should order for all presents.
+
 ---
 
 ## Instructions
