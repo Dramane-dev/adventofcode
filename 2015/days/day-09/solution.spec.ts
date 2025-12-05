@@ -1,4 +1,4 @@
-import { findMostShortWay } from './solution';
+import { findMostLongWay, findMostShortWay } from './solution';
 import {
   cleanInput,
   findUniqueLocations,
@@ -6,6 +6,7 @@ import {
   generateLocationsPermutations,
   computePlannedRoutesDistances,
   computePlannedRouteDistance,
+  findRoute,
 } from './utils';
 
 describe('Day 9: All in a Single Night', () => {
@@ -608,6 +609,118 @@ describe('Day 9: All in a Single Night', () => {
       expect(result).toEqual(expected);
     });
   });
+  describe('findRoute - most short way', () => {
+    const cases = [
+      {
+        level: 'easy',
+        input: ['London to Dublin = 464', 'London to Belfast = 518', 'Dublin to Belfast = 141'],
+        expected: 605,
+      },
+      {
+        level: 'medium - 4 cities',
+        input: [
+          'Paris to London = 100',
+          'Paris to Berlin = 200',
+          'Paris to Rome = 300',
+          'London to Berlin = 150',
+          'London to Rome = 250',
+          'Berlin to Rome = 180',
+        ],
+        expected: 430, // Paris → London → Berlin → Rome
+      },
+      {
+        level: 'edge - 2 cities only',
+        input: ['CityA to CityB = 50'],
+        expected: 50,
+      },
+      {
+        level: 'medium - symmetric distances',
+        input: ['Alpha to Beta = 10', 'Alpha to Gamma = 10', 'Beta to Gamma = 10'],
+        expected: 20, // Equilateral triangle, any path = 20
+      },
+      {
+        level: 'hard - 5 cities with trap',
+        input: [
+          'A to B = 1',
+          'A to C = 100',
+          'A to D = 100',
+          'A to E = 100',
+          'B to C = 1',
+          'B to D = 100',
+          'B to E = 100',
+          'C to D = 1',
+          'C to E = 100',
+          'D to E = 1',
+        ],
+        expected: 4, // A → B → C → D → E
+      },
+    ];
+
+    it.each(cases)('should return $expected when $level level', ({ input, expected }) => {
+      // GIVEN
+      // WHEN
+      const result = findRoute({ input, aggregator: (distances) => Math.min(...distances) });
+
+      // THEN
+      expect(result).toBe(expected);
+    });
+  });
+  describe('findRoute - most long way', () => {
+    const cases = [
+      {
+        level: 'easy',
+        input: ['London to Dublin = 464', 'London to Belfast = 518', 'Dublin to Belfast = 141'],
+        expected: 982,
+      },
+      {
+        level: 'medium - 4 cities',
+        input: [
+          'Paris to London = 100',
+          'Paris to Berlin = 200',
+          'Paris to Rome = 300',
+          'London to Berlin = 150',
+          'London to Rome = 250',
+          'Berlin to Rome = 180',
+        ],
+        expected: 750, // Paris → London → Berlin → Rome
+      },
+      {
+        level: 'edge - 2 cities only',
+        input: ['CityA to CityB = 50'],
+        expected: 50,
+      },
+      {
+        level: 'medium - symmetric distances',
+        input: ['Alpha to Beta = 10', 'Alpha to Gamma = 10', 'Beta to Gamma = 10'],
+        expected: 20, // Equilateral triangle, any path = 20
+      },
+      {
+        level: 'hard - 5 cities with trap',
+        input: [
+          'A to B = 1',
+          'A to C = 100',
+          'A to D = 100',
+          'A to E = 100',
+          'B to C = 1',
+          'B to D = 100',
+          'B to E = 100',
+          'C to D = 1',
+          'C to E = 100',
+          'D to E = 1',
+        ],
+        expected: 400, // A → B → C → D → E
+      },
+    ];
+
+    it.each(cases)('should return $expected when $level level', ({ input, expected }) => {
+      // GIVEN
+      // WHEN
+      const result = findRoute({ input, aggregator: (distances) => Math.max(...distances) });
+
+      // THEN
+      expect(result).toBe(expected);
+    });
+  });
   describe('findMostShortWay', () => {
     const cases = [
       {
@@ -659,6 +772,62 @@ describe('Day 9: All in a Single Night', () => {
       // GIVEN
       // WHEN
       const result = findMostShortWay(input);
+
+      // THEN
+      expect(result).toBe(expected);
+    });
+  });
+  describe('findMostLongWay', () => {
+    const cases = [
+      {
+        level: 'easy',
+        input: ['London to Dublin = 464', 'London to Belfast = 518', 'Dublin to Belfast = 141'],
+        expected: 982,
+      },
+      {
+        level: 'medium - 4 cities',
+        input: [
+          'Paris to London = 100',
+          'Paris to Berlin = 200',
+          'Paris to Rome = 300',
+          'London to Berlin = 150',
+          'London to Rome = 250',
+          'Berlin to Rome = 180',
+        ],
+        expected: 750, // Paris → London → Berlin → Rome
+      },
+      {
+        level: 'edge - 2 cities only',
+        input: ['CityA to CityB = 50'],
+        expected: 50,
+      },
+      {
+        level: 'medium - symmetric distances',
+        input: ['Alpha to Beta = 10', 'Alpha to Gamma = 10', 'Beta to Gamma = 10'],
+        expected: 20, // Equilateral triangle, any path = 20
+      },
+      {
+        level: 'hard - 5 cities with trap',
+        input: [
+          'A to B = 1',
+          'A to C = 100',
+          'A to D = 100',
+          'A to E = 100',
+          'B to C = 1',
+          'B to D = 100',
+          'B to E = 100',
+          'C to D = 1',
+          'C to E = 100',
+          'D to E = 1',
+        ],
+        expected: 400, // A → B → C → D → E
+      },
+    ];
+
+    it.each(cases)('should return $expected when $level level', ({ input, expected }) => {
+      // GIVEN
+      // WHEN
+      const result = findMostLongWay(input);
 
       // THEN
       expect(result).toBe(expected);
