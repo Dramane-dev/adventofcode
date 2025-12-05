@@ -1,4 +1,4 @@
-import { LocationsDistancesType } from '../index.type';
+import { AggregatorType, LocationsDistancesType } from '../index.type';
 
 export const cleanInput = (input: string[]) => {
   return input.map((item) => {
@@ -125,4 +125,23 @@ export const computePlannedRoutesDistances = ({
       locationsDistances,
     }),
   );
+};
+
+export const minAggregator = (distances: number[]) => Math.min(...distances);
+export const maxAggregator = (distances: number[]) => Math.max(...distances);
+
+export const findRoute = ({
+  input,
+  aggregator,
+}: {
+  input: string[];
+  aggregator: AggregatorType;
+}) => {
+  const cleanedInput = cleanInput(input);
+  const locations = findUniqueLocations(cleanedInput);
+  const locationsDistances = parseInput(cleanedInput);
+  const plannedRoutes = generateLocationsPermutations({ locations, startIndex: 0 });
+  const distances = computePlannedRoutesDistances({ plannedRoutes, locationsDistances });
+
+  return aggregator(distances);
 };
