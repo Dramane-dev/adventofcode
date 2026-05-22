@@ -2,32 +2,27 @@ import { countConsecutively } from './utils/index';
 
 export const computeLookAndSay = ({ inputs }: { inputs: string[] }) => {
   const sequences: string[] = [];
+  let index = 0;
 
-  for (let index = 0; index <= inputs.length; ) {
-    const currentInput = inputs.length > 1 ? inputs[index] : inputs[0];
+  inputs.forEach((_) => {
+    const currentInput = inputs[index];
+
+    if (currentInput === undefined) {
+      return;
+    }
+
     const numberOfCurrentInput = countConsecutively({
       inputs,
       searchedItem: currentInput,
+      startIndex: index,
     });
 
     if (numberOfCurrentInput > 0) {
       sequences.push(numberOfCurrentInput.toString(), currentInput);
     }
 
-    const isRemainingConsecutiveInputs = inputs.every((input) => input === currentInput);
-
-    if (isRemainingConsecutiveInputs) {
-      return sequences;
-    }
-
-    if (numberOfCurrentInput > 0) {
-      index = 0;
-    } else {
-      index++;
-    }
-
-    inputs = inputs.slice(numberOfCurrentInput);
-  }
+    index += numberOfCurrentInput;
+  });
 
   return sequences;
 };
