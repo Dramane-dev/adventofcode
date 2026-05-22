@@ -1,15 +1,17 @@
 export const countConsecutively = ({
   inputs,
   searchedItem,
+  startIndex,
 }: {
   inputs: string[];
   searchedItem: string;
+  startIndex: number;
 }) => {
   let count = 0;
   let canContinueToCount = true;
 
-  inputs.forEach((input) => {
-    if (input !== searchedItem) {
+  for (let i = startIndex; i <= inputs.length; i++) {
+    if (inputs[i] !== searchedItem) {
       canContinueToCount = false;
       return count;
     }
@@ -17,7 +19,7 @@ export const countConsecutively = ({
     if (canContinueToCount) {
       count++;
     }
-  });
+  }
 
   return count;
 };
