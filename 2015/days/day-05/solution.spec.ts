@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { findHowManyNiceStrings, findHowManyNiceStringsNext } from './solution';
 
 describe("Day 5: Doesn't He Have Intern-Elves For This?", () => {

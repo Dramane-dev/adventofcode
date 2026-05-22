@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import {
   computeEncodedStrings,
   computeStringsCode,
@@ -41,22 +42,22 @@ describe('Day 8: Matchsticks', () => {
       },
       {
         level: 'easy - aoc example',
-        input: getInput('./tests/aoc.txt'),
+        input: getInput('./2015/days/day-08/tests/aoc.txt'),
         expected: 23,
       },
       {
         level: 'easy - strings file',
-        input: getInput('./tests/easy.txt'),
+        input: getInput('./2015/days/day-08/tests/easy.txt'),
         expected: 59,
       },
       {
         level: 'medium - strings file',
-        input: getInput('./tests/medium.txt'),
+        input: getInput('./2015/days/day-08/tests/medium.txt'),
         expected: 85,
       },
       {
         level: 'hard - strings file',
-        input: getInput('./tests/hard.txt'),
+        input: getInput('./2015/days/day-08/tests/hard.txt'),
         expected: 264,
       },
     ];
@@ -104,22 +105,22 @@ describe('Day 8: Matchsticks', () => {
       },
       {
         level: 'easy - aoc example',
-        input: getInput('./tests/aoc.txt'),
+        input: getInput('./2015/days/day-08/tests/aoc.txt'),
         expected: 11,
       },
       {
         level: 'easy - strings file',
-        input: getInput('./tests/easy.txt'),
+        input: getInput('./2015/days/day-08/tests/easy.txt'),
         expected: 38,
       },
       {
         level: 'medium - strings file',
-        input: getInput('./tests/medium.txt'),
+        input: getInput('./2015/days/day-08/tests/medium.txt'),
         expected: 61,
       },
       {
         level: 'hard - strings file',
-        input: getInput('./tests/hard.txt'),
+        input: getInput('./2015/days/day-08/tests/hard.txt'),
         expected: 195,
       },
     ];
@@ -162,22 +163,22 @@ describe('Day 8: Matchsticks', () => {
       },
       {
         level: 'easy - aoc example',
-        input: getInput('./tests/aoc.txt'),
+        input: getInput('./2015/days/day-08/tests/aoc.txt'),
         expected: 12,
       },
       {
         level: 'easy - strings file',
-        input: getInput('./tests/easy.txt'),
+        input: getInput('./2015/days/day-08/tests/easy.txt'),
         expected: 21,
       },
       {
         level: 'medium - strings file',
-        input: getInput('./tests/medium.txt'),
+        input: getInput('./2015/days/day-08/tests/medium.txt'),
         expected: 24,
       },
       {
         level: 'hard - strings file',
-        input: getInput('./tests/hard.txt'),
+        input: getInput('./2015/days/day-08/tests/hard.txt'),
         expected: 69,
       },
     ];
@@ -231,22 +232,22 @@ describe('Day 8: Matchsticks', () => {
       },
       {
         level: 'easy - aoc example',
-        input: getInput('./tests/aoc.txt'),
+        input: getInput('./2015/days/day-08/tests/aoc.txt'),
         expected: 42,
       },
       {
         level: 'easy - strings file',
-        input: getInput('./tests/easy.txt'),
+        input: getInput('./2015/days/day-08/tests/easy.txt'),
         expected: 101,
       },
       {
         level: 'medium - strings file',
-        input: getInput('./tests/medium.txt'),
+        input: getInput('./2015/days/day-08/tests/medium.txt'),
         expected: 128,
       },
       {
         level: 'hard - strings file',
-        input: getInput('./tests/hard.txt'),
+        input: getInput('./2015/days/day-08/tests/hard.txt'),
         expected: 352,
       },
     ];
@@ -289,22 +290,22 @@ describe('Day 8: Matchsticks', () => {
       },
       {
         level: 'easy - aoc example',
-        input: getInput('./tests/aoc.txt'),
+        input: getInput('./2015/days/day-08/tests/aoc.txt'),
         expected: 19,
       },
       {
         level: 'easy - strings file',
-        input: getInput('./tests/easy.txt'),
+        input: getInput('./2015/days/day-08/tests/easy.txt'),
         expected: 42,
       },
       {
         level: 'medium - strings file',
-        input: getInput('./tests/medium.txt'),
+        input: getInput('./2015/days/day-08/tests/medium.txt'),
         expected: 43,
       },
       {
         level: 'hard - strings file',
-        input: getInput('./tests/hard.txt'),
+        input: getInput('./2015/days/day-08/tests/hard.txt'),
         expected: 88,
       },
     ];

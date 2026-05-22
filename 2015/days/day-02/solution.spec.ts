@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getRequiredRebbonToWrapPresents, getWrappingPaperSurfaceArea } from './solution';
 
 describe('Day 2: I Was Told There Would Be No Math', () => {
