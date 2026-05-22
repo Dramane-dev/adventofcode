@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getDeliveryFloor, getFirstDownInstructionIndex } from './solution';
 
 describe('Day 1 - Not Quite Lisp', () => {

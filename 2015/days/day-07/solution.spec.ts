@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { BITWISE_OPERATOR_ENUM } from './constants';
 import { findSpecificWireSignalRecursively, prepareWireInstructions } from './recursive-solution';
 import { hasSignalValue, applyInstruction, findSpecificWireSignal } from './solution';

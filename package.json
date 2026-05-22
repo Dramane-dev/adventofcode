@@ -16,9 +16,10 @@
   "author": "dramane-dev <dramane.dev@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "^2.0.0",
+    "@types/node": "^25.9.1",
     "@vitest/coverage-v8": "^2.0.0",
-    "jsdom": "^25.0.0"
+    "jsdom": "^25.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
   }
 }

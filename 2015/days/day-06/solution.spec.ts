@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { findHowManyLightsAreLit, findTotalBrightness } from './solution';
 
 describe('Day 6: Probably a Fire Hazard', () => {

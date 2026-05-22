@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { findSantaLowestPositiveNumber } from './solution';
 
 describe('Day 3: Perfectly Spherical Houses in a Vacuum', () => {

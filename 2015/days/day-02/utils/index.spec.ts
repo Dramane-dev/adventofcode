@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { assertIsValidInputSize, cleanInput, parseInputToNumber, sortInput } from '.';
 
 describe('cleanInput', () => {
